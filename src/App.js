@@ -1,32 +1,29 @@
 
 import './App.css';
+import Dashboard from './components/shared/sidebar';
 
 const App = () => {
+
   return (
     <div className="App">
-      <nav id="sidebarMenu" className="collapse d-lg-block sidebar collapse">
-        <div className="list-group list-group-flush">
-          <a href="#" className="list-group-item textbg_color" >
-            <i className="textbg_color"></i><span> Dashboard</span>
-          </a>
-        </div>
-      </nav>
-      <div class="container box-shadow">
-        <div class="row">
-          <div class="col">
+      {/* <Dashboard /> */}
+      <div className="container box-shadow">
+        <div className="row">
+          <div className="col">
+            {/* <canvas id="lineChart">graph</canvas> */}
             graph
           </div>
-          <div class="col">
+          <div className="col">
             new registration
           </div>
         </div>
       </div>
-      <div class="container">
-        <div class="row">
-          <div class="col">
+      <div className="container">
+        <div className="row">
+          <div className="col">
             total No OF ppl
           </div>
-          <div class="col">
+          <div className="col">
             Locations
           </div>
         </div>
