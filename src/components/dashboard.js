@@ -7,9 +7,7 @@ export const Dashboard = () => {
     const [state, setState] = useState();
 
     useEffect(() => {
-        // fetch('http://localhost:3000/users')
-        // .then((res) => res.json)
-        // .then((data) => { setState(data) })
+        //api : http://ec2-52-66-43-154.ap-south-1.compute.amazonaws.com:8080/api/users
         fetch('http://localhost:3000/users').then((response) => {
             if (response.ok) {
                 return response.json();
@@ -37,18 +35,25 @@ export const Dashboard = () => {
                         <div className="col shadow-lg p-3 mb-5 bg-white rounded text-center">
                             <LineChart />
                         </div>
-                        <div className="col shadow-lg p-3 mb-5 bg-white rounded text-center">
-                            new registration
+                        <div className="col shadow-lg p-3 mb-5 bg-white rounded ">
+                            <div className='border-bottom p-1 mb-1 bg-light '>
+                                Today
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div className=" container boarder  ">
-                    <div className="row  ">
-                        <div className="col shadow-lg p-3 mb-5 bg-white rounded text-center">
-                            no of 
+                    <div className="row ">
+                        <div className="col shadow-lg p-3 mb-5 bg-white rounded ">
+                            <div className='border-bottom p-1 mb-1 bg-light'>
+
+                                on of
+                            </div>
                         </div>
-                        <div className="col shadow-lg p-3 mb-5 bg-white rounded text-center">
-                           Locations
+                        <div className="col shadow-lg p-3 mb-5 bg-white rounded ">
+                            <div className=' border-bottom p-1 mb-1 bg-light'>
+                                locations
+                            </div>
                         </div>
                     </div>
                 </div>
