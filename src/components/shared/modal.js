@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import SideBar from './shared/sidebar';
-import LineChart from './shared/lineChart';
-import Profile from '../images/person.svg';
-import Arrow from '../images/arrow-right.svg';
-import { Button, Col, Container, Modal, Row, Table } from 'react-bootstrap';
+import SideBar from '../shared/sidebar';
+import LineChart from '../shared/lineChart';
+import Profile from '../../images/person.svg';
+import Arrow from '../../images/arrow-right.svg';
+import { Button, Col, Container, Modal, Row } from 'react-bootstrap'
 
-export const Dashboard = () => {
+
+
+const Modalcomponent = () => {
+
     const [state, setState] = useState();
     const [modal, setModal] = useState({
         modal: false,
@@ -15,7 +18,7 @@ export const Dashboard = () => {
 
     useEffect(() => {
         //api : http://ec2-52-66-43-154.ap-south-1.compute.amazonaws.com:8080/api/users
-        fetch('http://ec2-52-66-43-154.ap-south-1.compute.amazonaws.com:8080/api/auth/users').then((response) => {
+        fetch('http://localhost:3000/users').then((response) => {
             if (response.ok) {
                 return response.json();
             }
@@ -35,53 +38,26 @@ export const Dashboard = () => {
     const closeModal = () => {
         setModal({ ...modal, modal: false })
     }
-    const uniqueIds = [];
-    const count = []
-    if (state) {
-        state.forEach(element => {
-            count[element.area] = (count[element.area] || 0) + 1
 
-        });
-
-    }
-
-
-
-    console.log("Count", count);
-
-    if (state) {
-
-        var unique = state.filter(element => {
-            const isDuplicate = uniqueIds.includes(element.area);
-
-            if (!isDuplicate) {
-                uniqueIds.push(element.area);
-                return true
-            }
-            return false;
-        })
-    }
-
-    console.log("Unique", unique)
-
-    console.log('state', state);
+    console.log(state && state[modal.data]);
     return (
-        <div >
+        <div>
+
             <SideBar />
-            <Container className=''>
-                    <h1 className='text-primary  '>Welcome Back</h1>
+
+
+            <Container>
                 <Row >
+                    <h1 className='text-primary'>Welcome Back</h1>
                     <Col className="col-md-3"></Col>
                     <Col className="col-md-4 ">
-                        <div className="row ">
-                            <div className=" shadow-lg p-3 mb-5 bg-white rounded text-center">
-                                <LineChart />
-                            </div>
-                        </div>
+                                <div className="row ">
+                                    <div className=" shadow-lg p-3 mb-5 bg-white rounded text-center">
+                                        <LineChart />
+                                    </div>
+                                </div>
                     </Col>
                     <Col className="col-md-4  ">
-                   
-
                         <div className=" shadow-lg p-3 mb-5 bg-white rounded ">
                             <div className='border-bottom p-1 mb-1 bg-light '>
                                 Today
@@ -109,7 +85,7 @@ export const Dashboard = () => {
                                         {
                                             state && state.map((each, index) => {
                                                 return (
-                                                    <tr key={index} onClick={() => showModal()}>
+                                                    <tr key={index} onClick={() => showModal(index)}>
                                                         <td><img src={Profile} alt="profile" /></td>
                                                         <td>{each.name}</td>
                                                         <td>{each.location}</td>
@@ -118,13 +94,13 @@ export const Dashboard = () => {
                                             })
                                         }
                                     </tbody>
-                                    <tfoot>
+                                    {/* <tfoot>
                                         <tr>
                                             <td>
                                                 <img src={Arrow} />
                                             </td>
                                         </tr>
-                                    </tfoot>
+                                    </tfoot> */}
                                 </table>
                             </div>
                         </div>
@@ -132,35 +108,8 @@ export const Dashboard = () => {
                     <Col className="col-md-4">
                         <div className="col shadow-lg p-3 mb-5 bg-white rounded ">
                             <div className=' border-bottom p-1 mb-1 bg-light'>
-                                Locations
+                                locations
                             </div>
-                            <Table>
-                                <thead className='text-center'>
-                                    <tr>
-                                        <th> City </th>
-                                        <th> Area </th>
-                                        <th> Street </th>
-                                        <th> No.of Registrations </th>
-
-
-                                    </tr>
-                                </thead>
-                                <tbody >
-                                    
-                                    {
-                                        unique && unique.map((users, index) => {
-                                            return (
-
-                                                <tr key={index}>
-                                                    <td>{users.location}</td>
-                                                    <td>{users.area}</td>
-                                                    <td>{users.street}</td>
-                                                </tr>
-                                            )
-                                        })
-                                    }
-                                </tbody>
-                            </Table>
                         </div>
                         <Modal
                             size="md"
@@ -191,3 +140,4 @@ export const Dashboard = () => {
         </div >
     )
 }
+export default Modalcomponent;

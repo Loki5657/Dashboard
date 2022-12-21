@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 import { Dashboard } from "./components/dashboard";
 import LineChart from "./components/shared/lineChart";
+import  Modalcomponent  from "../src/components/shared/modal";
 
 
 
@@ -18,6 +19,8 @@ const AppRoutes = () => {
       <Routes>
         <Route path="/" element={<Dashboard />} />
         <Route path="/linechart" element={<LineChart />} />
+        <Route path="/modal" element={<Modalcomponent />} />
+
       </Routes>
     </Router>
   );
