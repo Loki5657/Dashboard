@@ -28,3 +28,6 @@
 .main-container{
     height: 10vh !important;
 }
+.ml-10{
+    margin-left: 20px !important;
+}

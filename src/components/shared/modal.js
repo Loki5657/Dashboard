@@ -8,11 +8,6 @@ import { BarChart } from './barChart';
 import femaleIcon from '../../images/male.svg'
 import maleIcon from '../../images/female.svg'
 
-
-
-
-
-
 const Modalcomponent = () => {
     const [state, setState] = useState();
     const [modal, setModal] = useState({
@@ -89,7 +84,7 @@ const Modalcomponent = () => {
             <Container className=''>
                 <h1 className='text-primary relative '>Welcome Back</h1>
                 <Row >
-                    <SideBar />
+                    <SideBar state={state} />
                     <Col className="col-md-2  "></Col>
                     <Col className="col">
                         <div className=" ">
@@ -168,16 +163,16 @@ const Modalcomponent = () => {
                         >
                             <Modal.Header>
                                 {
-                                    state && state[modal.data]?.name
+                                    modal.data?.name
                                 }
                                 <img src={Profile} alt="profile" />
                             </Modal.Header>
                             <Modal.Body >
                                 <div><span className='txt-bld'>Address:</span> {modal.data?.location}</div>
                                 <hr />
-                                <div><span className='txt-bld'>Mobile No:</span>{state && state[modal.data]?.mobile}</div>
+                                <div><span className='txt-bld'>Mobile No:</span>{modal.data?.mobile}</div>
                                 <hr />
-                                <div><span className='txt-bld'>Email:</span>{state && state[modal.data]?.email}</div>
+                                <div><span className='txt-bld'>Email:</span>{modal.data?.email}</div>
                             </Modal.Body>
                             <Modal.Footer onClick={closeModal}>
                                 close
