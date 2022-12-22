@@ -5,17 +5,27 @@ import Profile from '../../images/person.svg';
 import { Col, Container, Modal, Row, Table } from 'react-bootstrap'
 import Pagination from './pagination';
 import { BarChart } from './barChart';
+import femaleIcon from '../../images/male.svg'
+import maleIcon from '../../images/female.svg'
+
+
+
 
 
 
 const Modalcomponent = () => {
+    const [state, setState] = useState();
+    const [modal, setModal] = useState({
+        modal: false,
+        data: ''
+    })
     const DataTable = ({ posts }) => {
         return (
             <Table className='table table-striped tablelist-group mb-4'>
                 <tbody>
                     {posts?.map(post => (
                         <tr key={post.id} onClick={() => showModal(post.id)} >
-                            <td><img src={Profile} alt="profile" /></td>
+                            <td>{state.gender === "male" ? <img src={maleIcon} alt="profile" /> : <img src={femaleIcon} alt="profile" />}</td>
                             <td>{post.username}</td>
                             <td>{post.location}</td>
                         </tr>
@@ -26,11 +36,6 @@ const Modalcomponent = () => {
     };
 
 
-    const [state, setState] = useState();
-    const [modal, setModal] = useState({
-        modal: false,
-        data: ''
-    })
     const [currentPage, setCurrentPage] = useState(1);
     const [postsPerPage] = useState(5);
     const indexOfLastPost = currentPage * postsPerPage;
@@ -46,7 +51,7 @@ const Modalcomponent = () => {
             .then((res) => res.json())
             .then((data) => { setState(data) })
     }, []);
-    //show modal
+    //show modal 
     const showModal = (index) => {
         console.log('index', index);
         setModal({ ...modal, modal: true, data: index })
@@ -57,41 +62,27 @@ const Modalcomponent = () => {
         let val = state.filter((user) => {
             return user.id == modal.index
         });
-        console.log("id", val);
-
     }
-    const filterGender = () => {
-
-    }
-
-    console.log(state);
+    //gender filter
+    const male = state && state.filter((element) => element.gender.toLowerCase() === "male")
+    const female = state && state.filter((element) => element.gender.toLowerCase() === "female")
+    const uniqueIds = [];
     const count = []
-
     if (state) {
         state.forEach(element => {
-            count[element.area] = (count[element.area] || 0) + 1
-
+            count[element.location] = (count[element.location] || 0) + 1
         });
-
     }
-
-
-    const uniqueIds = [];
-
-
     if (state) {
-        var unique = state.filter(element => {
-            const isDuplicate = uniqueIds.includes(element.area);
+        var unique = state && state.filter(element => {
+            const isDuplicate = uniqueIds.includes(element.location);
             if (!isDuplicate) {
-                uniqueIds.push(element.area);
+                uniqueIds.push(element.location);
                 return true
             }
             return false;
         })
     }
-
-
-
     return (
         <div >
             <Container className=''>
@@ -101,7 +92,8 @@ const Modalcomponent = () => {
                     <Col className="col-md-2  "></Col>
                     <Col className="col">
                         <div className=" ">
-                            <div className=" shadow-lg p-3 mb-5 bg-white rounded text-center">
+                            <div className=" shadow-lg p-3 mb-5 bg-white rounded ">
+                                <h5>Over View</h5>
                                 <LineChart />
                             </div>
                         </div>
@@ -109,7 +101,7 @@ const Modalcomponent = () => {
                     <Col className="col">
                         <div className="row ">
                             <div className=" shadow-lg p-3 mb-5 bg-white rounded text-center">
-                                <BarChart state={state} />
+                                <BarChart state={state} male={male?.length} female={female?.length} />
                             </div>
                         </div>
                     </Col>
@@ -144,21 +136,22 @@ const Modalcomponent = () => {
                                 <thead className='text-center'>
                                     <tr>
                                         <th> City </th>
-                                        <th> Area </th>
-                                        <th> Street </th>
                                         <th> No.of Registrations </th>
                                     </tr>
                                 </thead>
-                                <tbody className="text-center">
-
+                                <tbody >
                                     {
-                                        unique && unique.map((users, index) => {
+                                        unique && unique.map((loc, index) => {
+                                            let count = 0;
+                                            state?.map((user) => {
+                                                if (user.location === loc.location) {
+                                                    count = count + 1
+                                                }
+                                            })
                                             return (
-
                                                 <tr key={index}>
-                                                    <td>{users.location}</td>
-                                                    <td>{users.area}</td>
-                                                    <td>{users.street}</td>
+                                                    <td >{loc.location}</td><td></td>
+                                                    <td >{count}</td>
                                                 </tr>
                                             )
                                         })

@@ -32,32 +32,31 @@ export const options = {
     },
 };
 const labels = ["Male", "Female", "Other"];
-const data = {
-    labels: labels,
-    datasets: [
-        {
-            label: 'Male',
-            data: [10],
-            backgroundColor: [
-                'rgba(53, 162, 235, 0.5)',
+export function BarChart(props) {
+    const data = {
+        labels: labels,
+        datasets: [
+            {
+                label: 'Male',
+                data: [props.male],
+                backgroundColor: [
+                    'rgba(53, 162, 235, 0.5)',
 
-            ],
-            borderWidth: 1
-        },
-        {
-            label: 'Female',
-            data: [0, 22],
-            backgroundColor: [
+                ],
+                borderWidth: 1
+            },
+            {
+                label: 'Female',
+                data: [0, props.female],
+                backgroundColor: [
 
-                'rgba(255, 99, 132, 0.5)',
-            ],
-            borderWidth: 1
-        }
-    ]
+                    'rgba(255, 99, 132, 0.5)',
+                ],
+                borderWidth: 1
+            }
+        ]
 
-};
+    };
 
-export function BarChart() {
-    
     return <div><Bar options={options} data={data} className="lineinnerheight" /></div>;
 }
