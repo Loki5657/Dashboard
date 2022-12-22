@@ -24,7 +24,7 @@ const Modalcomponent = () => {
             <Table className='table table-striped tablelist-group mb-4'>
                 <tbody>
                     {posts?.map(post => (
-                        <tr key={post.id} onClick={() => showModal(post.id)} >
+                        <tr key={post.id} onClick={() => showModal(post)} >
                             <td>{state.gender === "male" ? <img src={maleIcon} alt="profile" /> : <img src={femaleIcon} alt="profile" />}</td>
                             <td>{post.username}</td>
                             <td>{post.location}</td>
@@ -47,9 +47,12 @@ const Modalcomponent = () => {
     const paginate = pageNumber => setCurrentPage(pageNumber);
 
     useEffect(() => {
-        fetch('http://ec2-52-66-43-154.ap-south-1.compute.amazonaws.com:8080/api/auth/users')
-            .then((res) => res.json())
-            .then((data) => { setState(data) })
+        let Token = localStorage.getItem('token')
+        console.log(Token);
+        fetch('http://ec2-52-66-43-154.ap-south-1.compute.amazonaws.com:8080/api/users', {
+            method: "GET",
+            headers: { "Authorization": `Bearer ${Token}` }
+        }).then(res => res.json()).then((data) => setState(data));
     }, []);
     //show modal 
     const showModal = (index) => {
@@ -59,9 +62,7 @@ const Modalcomponent = () => {
     //close modal
     const closeModal = () => {
         setModal({ ...modal, modal: false })
-        let val = state.filter((user) => {
-            return user.id == modal.index
-        });
+
     }
     //gender filter
     const male = state && state.filter((element) => element.gender.toLowerCase() === "male")
@@ -172,7 +173,7 @@ const Modalcomponent = () => {
                                 <img src={Profile} alt="profile" />
                             </Modal.Header>
                             <Modal.Body >
-                                <div><span className='txt-bld'>Address:</span> {state && state[modal.data]?.location}</div>
+                                <div><span className='txt-bld'>Address:</span> {modal.data?.location}</div>
                                 <hr />
                                 <div><span className='txt-bld'>Mobile No:</span>{state && state[modal.data]?.mobile}</div>
                                 <hr />

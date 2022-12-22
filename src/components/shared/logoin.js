@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 export const Login = () => {
+    const navigate = useNavigate()
     const [state, setState] = useState({
         username: '',
         password: ''
@@ -15,8 +17,8 @@ export const Login = () => {
             body: JSON.stringify({ "username": state.username, 'password': state.password })
         })
             .then(response => response.json())
-            .then(response => localStorage.setItem("token",response))
-        
+            .then(response => localStorage.setItem("token", response.token))
+        navigate("/modal")
     }
     const getdata = (e) => {
         const { name, value } = e.target;
@@ -25,9 +27,19 @@ export const Login = () => {
 
     };
 
+    const getUsers = () => {
+        let Token = localStorage.getItem('token')
+        console.log(Token);
+        fetch('http://ec2-52-66-43-154.ap-south-1.compute.amazonaws.com:8080/api/users', {
+            method: "GET",
+            headers: { "Authorization": `Bearer ${Token}` }
+        }).then(res => res.json()).then((data) => console.log(data));
+
+    }
 
 
-    console.log(state);
+
+
     return (
         <div>
             <form>
@@ -40,6 +52,7 @@ export const Login = () => {
                     <input type="password" name='password' class="form-control" id="exampleInputPassword1" placeholder="Password" onChange={getdata} />
                 </div>
                 <button type="button" class="btn btn-primary" onClick={sendReq}>Submit</button>
+                <button type='button' onClick={getUsers}>Get user</button>
             </form>
         </div>
     )

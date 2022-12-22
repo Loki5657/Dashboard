@@ -19,7 +19,7 @@ const AppRoutes = () => {
     <Router>
 
       <Routes>
-        <Route path="/" element={<Dashboard />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/linechart" element={<LineChart />} />
         <Route path="/modal" element={<Modalcomponent />} />
         <Route path="/barChart" element={<BarChart />} />
