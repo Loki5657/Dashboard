@@ -2,41 +2,60 @@ import React, { useEffect, useState } from 'react';
 import SideBar from './shared/sidebar';
 import LineChart from './shared/lineChart';
 import Profile from '../images/person.svg';
-import Arrow from '../images/arrow-right.svg';
+import Pagination from './shared/pagination';
 import { Button, Col, Container, Modal, Row, Table } from 'react-bootstrap';
 
-export const Dashboard = () => {
+
+const Dashboard = () => {
+    const DataTable = ({ posts }) => {
+        return (
+            <Table className='table table-striped tablelist-group mb-4'>
+                <tbody>
+                    {posts?.map(post => (
+                        <tr key={post.id} onClick={() => showModal(post.id)} >
+                            <td><img src={Profile} alt="profile" /></td>
+                            <td>{post.username}</td>
+                            <td>{post.location}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </Table>
+        );
+    };
+
+
     const [state, setState] = useState();
     const [modal, setModal] = useState({
         modal: false,
         data: ''
     })
+    const [currentPage, setCurrentPage] = useState(1);
+    const [postsPerPage] = useState(4);
+    const indexOfLastPost = currentPage * postsPerPage;
+    const indexOfFirstPost = indexOfLastPost - postsPerPage;
+    const currentPosts = state?.slice(indexOfFirstPost, indexOfLastPost);
+    console.log('currentPosts', indexOfLastPost);
 
+    // Change page
+    const paginate = pageNumber => setCurrentPage(pageNumber);
 
     useEffect(() => {
-        //api : http://ec2-52-66-43-154.ap-south-1.compute.amazonaws.com:8080/api/users
-        fetch('http://ec2-52-66-43-154.ap-south-1.compute.amazonaws.com:8080/api/auth/users').then((response) => {
-            if (response.ok) {
-                return response.json();
-            }
-            throw new Error('Something went wrong');
-        })
-            .then((data) => {
-                setState(data)
-            })
-            .catch((error) => {
-                console.log(error)
-            });
-    }, [])
-
+        fetch('http://ec2-52-66-43-154.ap-south-1.compute.amazonaws.com:8080/api/auth/users')
+            .then((res) => res.json())
+            .then((data) => { setState(data) })
+    }, []);
+    //show modal
     const showModal = (index) => {
         setModal({ ...modal, modal: true, data: index })
     }
+    //close modal
     const closeModal = () => {
         setModal({ ...modal, modal: false })
     }
-    const uniqueIds = [];
+
+
     const count = []
+
     if (state) {
         state.forEach(element => {
             count[element.area] = (count[element.area] || 0) + 1
@@ -44,16 +63,10 @@ export const Dashboard = () => {
         });
 
     }
-
-
-
-    console.log("Count", count);
-
+    const uniqueIds = [];
     if (state) {
-
         var unique = state.filter(element => {
             const isDuplicate = uniqueIds.includes(element.area);
-
             if (!isDuplicate) {
                 uniqueIds.push(element.area);
                 return true
@@ -61,15 +74,11 @@ export const Dashboard = () => {
             return false;
         })
     }
-
-    console.log("Unique", unique)
-
-    console.log('state', state);
     return (
-        <div >
+        <div className='main-container' >
             <SideBar />
             <Container className=''>
-                    <h1 className='text-primary  '>Welcome Back</h1>
+                <h3 className='text-primary relative '>Welcome Back</h3>
                 <Row >
                     <Col className="col-md-3"></Col>
                     <Col className="col-md-4 ">
@@ -80,8 +89,6 @@ export const Dashboard = () => {
                         </div>
                     </Col>
                     <Col className="col-md-4  ">
-                   
-
                         <div className=" shadow-lg p-3 mb-5 bg-white rounded ">
                             <div className='border-bottom p-1 mb-1 bg-light '>
                                 Today
@@ -102,37 +109,24 @@ export const Dashboard = () => {
                             <div className="col shadow-lg p-3 mb-5 bg-white rounded ">
                                 <div className='border-bottom p-1 mb-1 bg-light'>
                                     Total No Of People Registered
-                                    <span className='ml-50'>{state && state.length}</span>
+                                    <span className='ml-45'>{state && state.length}</span>
                                 </div>
-                                <table className="table table-hover">
-                                    <tbody>
-                                        {
-                                            state && state.map((each, index) => {
-                                                return (
-                                                    <tr key={index} onClick={() => showModal()}>
-                                                        <td><img src={Profile} alt="profile" /></td>
-                                                        <td>{each.name}</td>
-                                                        <td>{each.location}</td>
-                                                    </tr>
-                                                );
-                                            })
-                                        }
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <td>
-                                                <img src={Arrow} />
-                                            </td>
-                                        </tr>
-                                    </tfoot>
-                                </table>
+                                <DataTable posts={currentPosts} />
+                                <Pagination
+                                    postsPerPage={postsPerPage}
+                                    totalPosts={state?.length}
+                                    paginate={paginate}
+                                />
+                                <div>
+
+                                </div>
                             </div>
                         </div>
                     </Col>
                     <Col className="col-md-4">
                         <div className="col shadow-lg p-3 mb-5 bg-white rounded ">
                             <div className=' border-bottom p-1 mb-1 bg-light'>
-                                Locations
+                                locations
                             </div>
                             <Table>
                                 <thead className='text-center'>
@@ -141,12 +135,10 @@ export const Dashboard = () => {
                                         <th> Area </th>
                                         <th> Street </th>
                                         <th> No.of Registrations </th>
-
-
                                     </tr>
                                 </thead>
-                                <tbody >
-                                    
+                                <tbody className="text-center">
+
                                     {
                                         unique && unique.map((users, index) => {
                                             return (
@@ -175,11 +167,11 @@ export const Dashboard = () => {
                                 <img src={Profile} alt="profile" />
                             </Modal.Header>
                             <Modal.Body >
-                                <div>Address:{state && state[modal.data]?.location}</div>
+                                <div><span className='txt-bld'>Address:</span> {state && state[modal.data]?.location}</div>
                                 <hr />
-                                <div>Mobile No:0000000000</div>
+                                <div><span className='txt-bld'>Mobile No:</span>{state && state[modal.data]?.mobile}</div>
                                 <hr />
-                                <div>Email:{state && state[modal.data]?.location}</div>
+                                <div><span className='txt-bld'>Email:</span>{state && state[modal.data]?.email}</div>
                             </Modal.Body>
                             <Modal.Footer onClick={closeModal}>
                                 close
@@ -191,3 +183,4 @@ export const Dashboard = () => {
         </div >
     )
 }
+export default Dashboard;

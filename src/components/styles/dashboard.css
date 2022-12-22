@@ -1,0 +1,30 @@
+.text-adjustment {
+    color: #2792CB !important;
+}
+
+.ml-45 {
+    margin-left: 45px !important;
+}
+.relative{
+    position: relative;
+    left: 160px;
+}
+.text-adjustment {
+    color: #2792CB !important;
+}
+
+.ml-50 {
+    margin-left: 120px !important;
+}
+
+.modalClose{
+    cursor: pointer;
+}
+.txt-bld{
+    font-size: 15px !important;
+    font-weight: bold !important;
+    margin-right: 10px !important;
+}
+.main-container{
+    height: 10vh !important;
+}

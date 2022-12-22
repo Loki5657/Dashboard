@@ -25,8 +25,12 @@ export const options = {
   responsive: true,
   plugins: {
     legend: {
-      // position: 'top',
+      position: 'top',
    
+    },
+    title: {
+      display: true,
+      text: 'Total no. of people registered in a year (2020-2021)',
     },
    
   },
@@ -37,9 +41,9 @@ export const data = {
     labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", 'Jul', 'Aug'],
     datasets: [
         {
-            label: "First dataset",
+            label: "Users",
             data: [1,3,2,4,3,2,5,4],
-            fill: false,
+            fill: true,
             backgroundColor: "#2792CB",
             borderColor: "#2792CB",
             shadowColor:"#2792CB",
