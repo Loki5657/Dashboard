@@ -30,7 +30,7 @@ export const options = {
     },
     title: {
       display: true,
-      text: 'Total no. of people registered in a year (2020-2021)',
+      text: 'Total No. Of People Registered In a Year 2022',
     },
    
   },
@@ -38,7 +38,7 @@ export const options = {
 
 
 export const data = {
-    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", 'Jul', 'Aug'],
+    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", 'Jul', 'Aug',"sep","Oct","Nov","Dec"],
     datasets: [
         {
             label: "Users",
@@ -53,7 +53,7 @@ export const data = {
 
 const lineChart=()=>{
   return (
-    <div >
+    <div  >
        <Line options={options} className="lineinnerheight" data={data} />
     </div>
   )

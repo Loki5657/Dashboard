@@ -2,17 +2,20 @@ import React, { useEffect, useState } from 'react';
 import SideBar from '../shared/sidebar';
 import LineChart from '../shared/lineChart';
 import Profile from '../../images/person.svg';
-import { Col, Container, Modal, Row, Table } from 'react-bootstrap'
+import { Col, Container, Dropdown, Modal, Row, Spinner, Table } from 'react-bootstrap'
 import Pagination from './pagination';
-import { BarChart } from './barChart';
+import { PeiChart } from './peiChart';
 import femaleIcon from '../../images/male.svg'
 import maleIcon from '../../images/female.svg'
 
+
 const Modalcomponent = () => {
+    const [loading, setLoading] = useState(true)
     const [state, setState] = useState();
     const [modal, setModal] = useState({
         modal: false,
-        data: ''
+        data: '',
+        date: ''
     })
     const DataTable = ({ posts }) => {
         return (
@@ -43,15 +46,16 @@ const Modalcomponent = () => {
 
     useEffect(() => {
         let Token = localStorage.getItem('token')
-        console.log(Token);
+
         fetch('http://ec2-52-66-43-154.ap-south-1.compute.amazonaws.com:8080/api/users', {
             method: "GET",
             headers: { "Authorization": `Bearer ${Token}` }
         }).then(res => res.json()).then((data) => setState(data));
+
+
     }, []);
     //show modal 
     const showModal = (index) => {
-        console.log('index', index);
         setModal({ ...modal, modal: true, data: index })
     }
     //close modal
@@ -60,7 +64,7 @@ const Modalcomponent = () => {
 
     }
     //gender filter
-    const male = state && state.filter((element) => element.gender.toLowerCase() === "male")
+    const male = state && state.filter((element) => element.gender.toLowerCase() === "m" || "male")
     const female = state && state.filter((element) => element.gender.toLowerCase() === "female")
     const uniqueIds = [];
     const count = []
@@ -79,25 +83,61 @@ const Modalcomponent = () => {
             return false;
         })
     }
+    let uniqueDates = [];
+
+    if (state) {
+        var dates = state && state.filter(element => {
+            const isDuplicate = uniqueIds.includes(element?.createdOn);
+            if (!isDuplicate) {
+                uniqueDates.push(element.createdOn);
+                return true
+            }
+            return false;
+        })
+    }
+    let countOfRegistedUsers = 0;
+    const date = new Date();
+
+    let day = date.getDate();
+    let month = date.getMonth() + 1;
+    let year = date.getFullYear();
+
+
+    let currentDate = `${year}-${month}-${day}`.split('').join()
+    // console.log("currentDate", currentDate);
+    dates?.map((createdDate, index) => {
+        let date = createdDate.createdOn?.toLocaleString().split('').splice(0, 10).join()
+
+        if (date === currentDate) {
+            countOfRegistedUsers = countOfRegistedUsers + 1
+        }
+    })
+   
+
+    console.log("date", modal.date);
     return (
         <div >
+            {/* {loading ? <Spinner animation="border" variant="primary" /> : */}
             <Container className=''>
-                <h1 className='text-primary relative '>Welcome Back</h1>
+                <h1 className='text-primary relative '>Welcome EyeBox</h1>
                 <Row >
                     <SideBar state={state} />
                     <Col className="col-md-2  "></Col>
-                    <Col className="col">
+                    <Col className="col-md-5">
                         <div className=" ">
                             <div className=" shadow-lg p-3 mb-5 bg-white rounded ">
-                                <h5>Over View</h5>
+                                <h5>Eye View</h5>
+                                
                                 <LineChart />
                             </div>
                         </div>
                     </Col>
-                    <Col className="col">
-                        <div className="row ">
+                    <Col className="col-md-3">
+
+                        <div className="row flx ">
                             <div className=" shadow-lg p-3 mb-5 bg-white rounded text-center">
-                                <BarChart state={state} male={male?.length} female={female?.length} />
+                                <h5>Total NO. Of People : {state?.length}</h5>
+                                <PeiChart state={state} male={male?.length} female={female?.length} />
                             </div>
                         </div>
                     </Col>
@@ -123,7 +163,7 @@ const Modalcomponent = () => {
                             </div>
                         </div>
                     </Col>
-                    <Col className="col-md-4">
+                    <Col className="col-md-3.">
                         <div className="col shadow-lg p-3 mb-5 bg-white rounded ">
                             <div className=' border-bottom p-1 mb-1 bg-light'>
                                 locations
@@ -179,7 +219,7 @@ const Modalcomponent = () => {
                             </Modal.Footer>
                         </Modal>
                     </Col>
-                    <Col className="col-md-2  ">
+                    <Col className="col-md-  ">
                         <div className=" shadow-lg p-3 mb-5 bg-white rounded ">
                             <div className='border-bottom p-1 mb-1 bg-light '>
                                 Today
@@ -187,13 +227,14 @@ const Modalcomponent = () => {
                             <div>
                                 <h6 className='text-primary text-adjustment p-2 bd-highlight'>New Registration</h6>
                                 <div>
-                                    <center>1.New Registration for the day</center>
+                                    <center><span className='txt-bld'>{countOfRegistedUsers}</span>New Registration for the day</center>
                                 </div>
                             </div>
                         </div>
                     </Col>
                 </Row>
             </Container >
+            {/* } */}
         </div >
     )
 }

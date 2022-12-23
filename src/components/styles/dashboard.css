@@ -5,10 +5,12 @@
 .ml-45 {
     margin-left: 45px !important;
 }
-.relative{
+
+.relative {
     position: relative;
     left: 160px;
 }
+
 .text-adjustment {
     color: #2792CB !important;
 }
@@ -17,17 +19,29 @@
     margin-left: 120px !important;
 }
 
-.modalClose{
+.modalClose {
     cursor: pointer;
 }
-.txt-bld{
+
+.txt-bld {
     font-size: 15px !important;
     font-weight: bold !important;
     margin-right: 10px !important;
 }
-.main-container{
+
+.main-container {
     height: 10vh !important;
 }
-.ml-10{
+
+.ml-10 {
     margin-left: 20px !important;
+}
+
+.pie_chart {
+    height: 210px !important;
+    width: 200px !important;
+}
+.txt-bld{
+    font-weight: bold !important;
+    font-size: 20px !important;
 }

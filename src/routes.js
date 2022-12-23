@@ -7,7 +7,7 @@ import {
 import Dashboard from "./components/dashboard";
 import LineChart from "./components/shared/lineChart";
 import Modalcomponent from "../src/components/shared/modal";
-import { BarChart } from "./components/shared/barChart";
+import { PeiChart } from "./components/shared/peiChart";
 import { Login } from "./components/shared/logoin";
 
 
@@ -22,7 +22,7 @@ const AppRoutes = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/linechart" element={<LineChart />} />
         <Route path="/modal" element={<Modalcomponent />} />
-        <Route path="/barChart" element={<BarChart />} />
+        <Route path="/barChart" element={<PeiChart />} />
         <Route path="/login" element={<Login />} />
 
       </Routes>
