@@ -21,40 +21,37 @@ ChartJS.register(
 
 );
 
-export const options = {
-  responsive: true,
-  plugins: {
-    legend: {
-      position: 'top',
-   
-    },
-    title: {
-      display: true,
-      text: 'Total No. Of People Registered In a Year 2022',
-    },
-   
-  },
-};
+const lineChart = (props) => {
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
 
+      },
+      title: {
+        display: true,
+        text: `Total No. Of People Registered In a Year ${props.year}`,
+      },
 
-export const data = {
-    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", 'Jul', 'Aug',"sep","Oct","Nov","Dec"],
+    },
+  };
+  const data = {
+    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", 'Jul', 'Aug', "Sep", "Oct", "Nov", "Dec"],
     datasets: [
-        {
-            label: "Users",
-            data: [1,3,2,4,3,2,5,4],
-            fill: true,
-            backgroundColor: "#2792CB",
-            borderColor: "#2792CB",
-            shadowColor:"#2792CB",
-        }
+      {
+        label: "Users",
+        data: [props.Jan, props.Feb, props.Mar, props.Apr, props.May, props.Jun, props.Jul, props.Aug, props.Sep, props.Oct, props.Oct, props.Dec],
+        fill: true,
+        backgroundColor: "#2792CB",
+        borderColor: "#2792CB",
+        shadowColor: "#2792CB",
+      }
     ]
-};
-
-const lineChart=()=>{
+  };
   return (
     <div  >
-       <Line options={options} className="lineinnerheight" data={data} />
+      <Line options={options} className="lineinnerheight" data={data} />
     </div>
   )
 

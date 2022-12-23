@@ -16,7 +16,7 @@
 }
 
 .ml-50 {
-    margin-left: 120px !important;
+    margin-left: 60px !important;
 }
 
 .modalClose {
@@ -41,7 +41,17 @@
     height: 210px !important;
     width: 200px !important;
 }
-.txt-bld{
+
+.txt-bld {
     font-weight: bold !important;
     font-size: 20px !important;
+}
+
+tr:hover {
+    background-color: rgb(162, 162, 240);
+}
+
+.img_size {
+    height: 20px !important;
+    width: 40px !important;
 }

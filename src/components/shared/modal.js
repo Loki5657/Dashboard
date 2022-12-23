@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import SideBar from '../shared/sidebar';
 import LineChart from '../shared/lineChart';
 import Profile from '../../images/person.svg';
+import Menu from '../../images/menu.svg';
 import { Col, Container, Dropdown, Modal, Row, Spinner, Table } from 'react-bootstrap'
 import Pagination from './pagination';
 import { PeiChart } from './peiChart';
@@ -10,6 +11,7 @@ import maleIcon from '../../images/female.svg'
 
 
 const Modalcomponent = () => {
+    const [display, setDisplay] = useState({ show: false })
     const [loading, setLoading] = useState(true)
     const [state, setState] = useState();
     const [modal, setModal] = useState({
@@ -23,7 +25,7 @@ const Modalcomponent = () => {
                 <tbody>
                     {posts?.map(post => (
                         <tr key={post.id} onClick={() => showModal(post)} >
-                            <td>{state.gender === "male" ? <img src={maleIcon} alt="profile" /> : <img src={femaleIcon} alt="profile" />}</td>
+                            <td>{post.gender.toLowerCase() === "male" ? "Male" : "Female"}</td>
                             <td>{post.username}</td>
                             <td>{post.location}</td>
                         </tr>
@@ -64,7 +66,7 @@ const Modalcomponent = () => {
 
     }
     //gender filter
-    const male = state && state.filter((element) => element.gender.toLowerCase() === "m" || "male")
+    const male = state && state.filter((element) => element.gender.toLowerCase() === "male")
     const female = state && state.filter((element) => element.gender.toLowerCase() === "female")
     const uniqueIds = [];
     const count = []
@@ -75,16 +77,28 @@ const Modalcomponent = () => {
     }
     if (state) {
         var unique = state && state.filter(element => {
-            const isDuplicate = uniqueIds.includes(element.location);
+            var lowerLocation = element.location.toLowerCase()
+            const isDuplicate = uniqueIds.includes(lowerLocation);
             if (!isDuplicate) {
-                uniqueIds.push(element.location);
+                uniqueIds.push(element.location.toLowerCase());
                 return true
             }
             return false;
         })
     }
     let uniqueDates = [];
-
+    //date filter
+    if (state) {
+        var dates = state && state.filter(element => {
+            const isDuplicate = uniqueIds.includes(element?.createdOn);
+            if (!isDuplicate) {
+                uniqueDates.push(element.createdOn);
+                return true
+            }
+            return false;
+        })
+    }
+    //month filter
     if (state) {
         var dates = state && state.filter(element => {
             const isDuplicate = uniqueIds.includes(element?.createdOn);
@@ -101,34 +115,88 @@ const Modalcomponent = () => {
     let day = date.getDate();
     let month = date.getMonth() + 1;
     let year = date.getFullYear();
-
-
     let currentDate = `${year}-${month}-${day}`.split('').join()
+    let currentMonth = `${year}-${month}`.split('').join()
+    let currentYear = `${year}-`.split('').join()
     // console.log("currentDate", currentDate);
-    dates?.map((createdDate, index) => {
-        let date = createdDate.createdOn?.toLocaleString().split('').splice(0, 10).join()
+    var Jan = 0, Feb = 0, Mar = 0, Apr = 0, May = 0, Jun = 0, Jul = 0, Aug = 0, Sep = 0, Oct = 0, Nov = 0, Dec = 0
 
+    dates?.map((createdDate) => {
+        let monthFilter = createdDate.createdOn?.toLocaleString().split('').splice(0, 7).join()
+        let date = createdDate.createdOn?.toLocaleString().split('').splice(0, 10).join()
         if (date === currentDate) {
             countOfRegistedUsers = countOfRegistedUsers + 1
         }
-    })
-   
+        switch (monthFilter) {
+            case (currentYear + `,1,2`):
+                Dec++
+                break;
+            case (currentYear + `,1,1`):
+                Nov++
+                break;
+            case (currentYear + `,1,0`):
+                Oct++
+                break;
+            case (currentYear + `,0,9`):
+                Sep++
+                break;
+            case (currentYear + `,0,8`):
+                Aug++
+                break;
+            case (currentYear + `,0,7`):
+                Jul++
+                break;
+            case (currentYear + `,0,6`):
+                Jun++
+                break;
+            case (currentYear + `,0,5`):
+                May++
+                break;
+            case (currentYear + `,0,4`):
+                Apr++
+                break;
+            case (currentYear + `,0,3`):
+                Mar++
+                break;
+            case (currentYear + `,0,2`):
+                Feb++
+                break;
+            case (currentYear + `,0,1`):
+                Jan++
+                break;
+        }
 
-    console.log("date", modal.date);
+
+    })
+
+
+    const handleshow = (open) => {
+        if (open == false) {
+            setDisplay({ ...display, show: true })
+
+        } else {
+            setDisplay({ ...display, show: false })
+
+        }
+    }
     return (
         <div >
             {/* {loading ? <Spinner animation="border" variant="primary" /> : */}
             <Container className=''>
                 <h1 className='text-primary relative '>Welcome EyeBox</h1>
-                <Row >
-                    <SideBar state={state} />
+                <Row ><img src={Menu} className="img_size" onClick={() => handleshow(display?.show)} />
+                    {display?.show ?
+                        <SideBar /> : ""
+                    }
+                    {/* <SideBar state={state}/> */}
+                    {/* <SideBar state={state} /> */}
                     <Col className="col-md-2  "></Col>
                     <Col className="col-md-5">
                         <div className=" ">
                             <div className=" shadow-lg p-3 mb-5 bg-white rounded ">
                                 <h5>Eye View</h5>
-                                
-                                <LineChart />
+
+                                <LineChart year={year} Jan={Jan} Feb={Feb} Mar={Mar} Apr={Apr} May={May} Jun={Jun} Jul={Jul} Aug={Aug} Sep={Sep} Oct={Oct} Nov={Nov} Dec={Dec} />
                             </div>
                         </div>
                     </Col>
@@ -136,7 +204,7 @@ const Modalcomponent = () => {
 
                         <div className="row flx ">
                             <div className=" shadow-lg p-3 mb-5 bg-white rounded text-center">
-                                <h5>Total NO. Of People : {state?.length}</h5>
+                                <h5>Total No. Of People : {state?.length}</h5>
                                 <PeiChart state={state} male={male?.length} female={female?.length} />
                             </div>
                         </div>
@@ -148,8 +216,8 @@ const Modalcomponent = () => {
                         <div className="row ">
                             <div className="col shadow-lg p-3 mb-5 bg-white rounded ">
                                 <div className='border-bottom p-1 mb-1 bg-light'>
-                                    Total No Of People Registered
-                                    <span className='ml-45'>{state && state.length}</span>
+                                    <b>Total No Of People Registered</b>
+                                    <span className='ml-50'><b className='txt-bld '>{state && state.length}</b></span>
                                 </div>
                                 <DataTable posts={currentPosts} />
                                 <Pagination
@@ -166,7 +234,7 @@ const Modalcomponent = () => {
                     <Col className="col-md-3.">
                         <div className="col shadow-lg p-3 mb-5 bg-white rounded ">
                             <div className=' border-bottom p-1 mb-1 bg-light'>
-                                locations
+                                <b>Locations</b>
                             </div>
                             <Table>
                                 <thead className='text-center'>
@@ -203,11 +271,14 @@ const Modalcomponent = () => {
                         >
                             <Modal.Header>
                                 {
-                                    modal.data?.name
+                                    <div><span className='txt-bld'>Name:</span> {modal.data?.username}</div>
+
                                 }
                                 <img src={Profile} alt="profile" />
                             </Modal.Header>
                             <Modal.Body >
+                                <div><span className='txt-bld'>Gender:</span> {modal.data?.gender}</div>
+                                <hr />
                                 <div><span className='txt-bld'>Address:</span> {modal.data?.location}</div>
                                 <hr />
                                 <div><span className='txt-bld'>Mobile No:</span>{modal.data?.mobile}</div>
@@ -222,7 +293,7 @@ const Modalcomponent = () => {
                     <Col className="col-md-  ">
                         <div className=" shadow-lg p-3 mb-5 bg-white rounded ">
                             <div className='border-bottom p-1 mb-1 bg-light '>
-                                Today
+                                <b> Today</b>
                             </div>
                             <div>
                                 <h6 className='text-primary text-adjustment p-2 bd-highlight'>New Registration</h6>

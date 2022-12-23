@@ -2,50 +2,44 @@
 
 import React, { useState } from "react";
 import { Button, Table } from "react-bootstrap"
-import "../styles/dashboard.css"
+import "../styles/dashboard.css";
+import { useNavigate } from "react-router-dom";
+import Menu from '../../images/menu.svg';
+
 
 const SideBar = (props) => {
-    const DataTable = ({ posts }) => {
-        return (
-            <Table className='table table-striped tablelist-group mb-4'>
-                <tbody>
-                    {posts?.map(post => (
-                        <tr key={post.id} >
-                            <td>{post.username}</td>
-                        </tr>
-                    ))}
-                    <tr><Button onClick={handleClose} className="m-4">Close</Button>
-                        {/* <Button>Export</Button> */}
-                        </tr>
-                </tbody>
-            </Table>
-            
-        );
+    const navigate = useNavigate()
 
-    };
     const [display, setDisplay] = useState({
-        show:false
+        show: false
     })
 
-    const handleData=()=>{
-        setDisplay({...display,show:true})
+    const handleData = () => {
+        navigate('/users')
+        setDisplay({ ...display, show: true })
     }
-    const handleClose=()=>{
-        setDisplay({...display,show:false})
+    const handleClose = () => {
+        setDisplay({ ...display, show: false })
+    }
+    const handleshow = (open) => {
+        if (open == false) {
+            setDisplay({ ...display, show: true })
+
+        } else {
+            setDisplay({ ...display, show: false })
+
+        }
     }
     return (
         <div>
+            <img src={Menu} className="img_size" onClick={() => handleshow(display?.show)} />
             <nav id="sidebarMenu" className="collapse d-lg-block sidebar collapse">
                 <div className="list-group list-group-flush">
-                    <a href="#" className="list-group-item textbg_color" >
+                    <a className="list-group-item textbg_color" >
                         <i className="textbg_color"></i><span> Dashboard</span>
                     </a>
                     <h5 onClick={handleData} className="modalClose ml-10">Users</h5>
-                    
-                       { display?.show && 
-                        <DataTable posts={props.state}  />
-                       }
-                   </div>
+                </div>
             </nav>
         </div>
     );
